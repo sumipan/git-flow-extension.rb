@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'git/flow/extension/version'
+require 'git_flow_extension/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "git-flow-extension"
-  spec.version       = Git::Flow::Extension::VERSION
+  spec.version       = GitFlowExtension::VERSION
   spec.authors       = ["takashi nagayasu"]
-  spec.email         = ["regist@g-onion.org"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.email         = ["ngys@g-onion.org"]
+  spec.summary       = %q{Git flow extension.}
+  spec.description   = %q{Git flow extension.}
+  spec.homepage      = "https://github.com/sumipan/git-flow-extension.rb"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
