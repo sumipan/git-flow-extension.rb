@@ -1,6 +1,6 @@
 # Git::Flow::Extension
 
-TODO: Write a gem description
+Inspire from motemen/git-pr-release. git-flow on the Github. Support command-line base operation.
 
 ## Installation
 
@@ -14,31 +14,23 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install git-flow-extension
-
-## Usage
-
-# Git-Flow Extension
-
-Git-Flow ExtensionはGithubを利用したGit-Flowの利用を簡単にするためのツールです。
-
 ## 使い方
 
-In-Ruby
+in ruby
 
 ```
-gfx = GitFlowExtension.new(:user, :repo, :token)
-gfx.release.create revision
-gfx.release.start revision
-gfx.release.update revision
-gfx.release.finish revision
+require 'git_flow_extension'
 
-gfx.hotfix.create revision
-gfx.hotfix.start revision
-gfx.hotfix.update revision
-gfx.hotfix.finish revision
+gfx = GitFlowExtension::Client.new
+gfx.release.create :revision => 100
+gfx.release.start  :number => 5001
+gfx.release.update :number => 5001
+gfx.release.finish :number => 5001
+
+gfx.hotfix.create :revision => 101
+gfx.hotfix.start  :number => 5002
+gfx.hotfix.update :number => 5002
+gfx.hotfix.finish :number => 5002
 ```
 
 or
@@ -46,62 +38,85 @@ or
 Command-Line
 
 ```
-$ cat .gfx
-
----
-user: user
-repo: repo
-token: token
-
-$ gfx release create revision
-$ gfx release start  revision
-$ gfx release update revision
-$ gfx release finish revision
-
-$ gfx hotfix create revision
-$ gfx hotfix start  revision
-$ gfx hotfix update revision
-$ gfx hotfix finish revision
+gfx release create --revision=100 --head=develop --base=release/100 --tag=v1.0.0
+gfx release update --number=5001
+gfx release start --number=5001
+gfx release finish --number=5001
 ```
 
+## hook point
 
-## リリース
+```
+gfx.release.on('create:before') do |opts|
+  # フックしたい処理をここに入れる
+end
+```
 
-1. イシューを作成する [create]
-2. リリースブランチを作る [start]
-3. イシューからプルリクエストを作る (from release/ to master) [start]
-4. リリース用の修正作業を行う
-5. プルリクエストをマージする [finish]
-6. masterでタグを打つ [finish]
-7. release/#{revision} を develop にマージする
+フックポイントの種類
 
-## ホットフィックス
+- create:before
+- create:after
+- create:error
+- start:before
+- start:after
+- start:error
+- update:before
+- update:after
+- update:error
+- finish:before
+- finish:after
+- finish:error
 
-1. hotfix/#{revision} のブランチを作成する
-2. イシューを作成する
-3. hotfix/#{revision} を閉じる
-4. イシューからプルリクエストを作る (from hotfix/ to master)
-5. リリース用の修正作業を行う
-6. プルリクエストをマージする
-7. masterでタグを打つ
-8. hotfix/#{revision} を develop にマージする
 
-イシューのフォーマット
--------------------
+### create
+
+新しいリリースのための管理用のイシューを作成します。
+
+イシューのフォーマットはヘッダーまではテンプレートから作成されますが、
+そこより下の部分はプログラムから自動で生成されます。
+
+含まれる情報は以下の通りです。
+
+- head ブランチの指定
+- base ブランチの指定
+- リリース時に自動的に tag を打つ場合は tag を指定
+
+
+### start
+
+リリース管理用のイシューからリリースブランチを作成します。
+リリース感利用のイシューがそのままプルリクエストに変更されます。
+baseブランチとheadブランチの間に差分がない場合はエラーになります。
+
+### update
+
+head ブランチへのマージ履歴を元にイシューを更新します。
+head ブランチに送られたプルリクエストをイシューに記載します。
+
+### finish
+
+base ブランチへ head ブランチをマージします。
+マージした後のフック処理を呼び出します。
+
+
+## イシューのフォーマット
 
 Title: ```Release v#{revision}``` or ```Hotfix v#{revision}```
 
 Body:
 
 ```
-base: master
-head: release/v10
-tag: v0.0.1
 
 リリースノート
 ----
 
 ここに変更点のリリースノートを最後に記入する
+
+----
+
+base: master
+head: release/v10
+tag: v0.0.1
 
 マージ済みの修正
 ----
@@ -115,8 +130,13 @@ tag: v0.0.1
 
 - [x] [テストされて、まだマージされていない修正](https://github.com/sumipan/git-flow-extension.rb/pull/3)
 - [ ] [テストされていなく、まだマージされていない修正](https://github.com/sumipan/git-flow-extension.rb/pull/4)
+
+クローズされた修正
+----
+
+- [ ] <del>[Don't merge! 実機確認用です](https://github.com/kayac/kuwata-unity/pull/5401)</del>
+
 ```
-- [ ] [Don't merge! 実機確認用です](https://github.com/kayac/kuwata-unity/pull/5401)
 
 ## Contributing
 

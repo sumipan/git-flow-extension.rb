@@ -5,3 +5,7 @@ gemspec
 
 gem 'git'
 gem 'github_api'
+gem 'octokit'
+gem 'colorize'
+gem 'diff-lcs'
+gem 'highline'
