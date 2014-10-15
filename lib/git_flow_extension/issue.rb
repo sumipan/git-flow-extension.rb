@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'json'
+
 module GitFlowExtension
 	class Issue
 
@@ -77,8 +79,12 @@ module GitFlowExtension
 		def merged_pulls
 			pulls = []
 
-			`git log --merges --format=oneline #{base}..#{head} -- `.split(/\r?\n/).each do |pull|
-				if match = pull.match(/^[0-9a-z]{40} Merge pull request #(\d+) from .+$/) then
+			request  = sprintf("https://%s:x-oauth-basic@api.github.com/repos/%s/%s/compare/%s...%s", token, user, repo, base, head)
+			cmd      = "curl #{request}"
+			@client.log.info('exec: ' + cmd)
+			response = `#{cmd}`
+			JSON.parse(response)['commits'].each do |commit|
+				if match = commit['commit']['message'].match(/^[0-9a-z]{40} Merge pull request #(\d+) from .+$/) then
 					pull = cached_pull(match[1])
 					@client.log.info('include #' + pull.number.to_s + ': ' + pull.title)
 					pulls.push pull
