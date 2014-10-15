@@ -79,7 +79,7 @@ module GitFlowExtension
 		def merged_pulls
 			pulls = []
 
-			request  = sprintf("https://%s:x-oauth-basic@api.github.com/repos/%s/%s/compare/%s...%s", @client.github.access_token, @client.github.user, @client.github.repo, base, head)
+			request  = sprintf("https://%s:x-oauth-basic@api.github.com/repos/%s/%s/compare/%s...%s", @client.github.oauth_token, @client.github.user, @client.github.repo, base, head)
 			cmd      = "curl #{request}"
 			@client.log.info('exec: ' + cmd)
 			response = `#{cmd}`
