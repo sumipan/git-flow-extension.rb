@@ -80,12 +80,14 @@ module GitFlowExtension
 			pulls = []
 
 			request  = sprintf("https://%s:x-oauth-basic@api.github.com/repos/%s/%s/compare/%s...%s", @client.github.oauth_token, @client.github.user, @client.github.repo, base, head)
-			cmd      = "curl #{request}"
-			@client.log.info('exec: ' + cmd)
-			response = `#{cmd}`
+			response = `curl #{request}`
 			JSON.parse(response)['commits'].each do |commit|
 				if match = commit['commit']['message'].match(/^Merge pull request #(\d+)/) then
 					pull = cached_pull(match[1])
+					if pull.merged_at then
+						pull.state = 'merged'
+					end
+
 					@client.log.info('include #' + pull.number.to_s + ': ' + pull.title)
 					pulls.push pull
 				end
