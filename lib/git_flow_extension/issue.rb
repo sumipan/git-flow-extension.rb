@@ -84,6 +84,7 @@ module GitFlowExtension
 			@client.log.info('exec: ' + cmd)
 			response = `#{cmd}`
 			JSON.parse(response)['commits'].each do |commit|
+				@client.log.info('test: ' + commit['commit']['message'])
 				if match = commit['commit']['message'].match(/^[0-9a-z]{40} Merge pull request #(\d+) from .+$/) then
 					pull = cached_pull(match[1])
 					@client.log.info('include #' + pull.number.to_s + ': ' + pull.title)
