@@ -34,6 +34,7 @@ module GitFlowExtension
 				raise 'body is empty' if body.empty?
 			rescue => e
 				@client.log.fatal(e.to_s)
+				@client.log.fatal(e.backtrace)
 				exit 1
 			end
 
