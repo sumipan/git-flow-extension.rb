@@ -167,7 +167,7 @@ module GitFlowExtension
 			puts '----'
 			puts ''
 			merged.each { |pull|
-				@client.log.info(pull.head.ref)
+				@client.log.info(pull.base.ref)
 				# next if pull.head.ref != head # head と違う p-r は除外する
 				puts sprintf("- [%s] [%s](%s)", (pull.checked ? 'x' : ' '), pull.title, pull.html_url)
 			}
