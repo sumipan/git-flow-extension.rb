@@ -183,7 +183,7 @@ module GitFlowExtension
 			puts '----'
 			puts ''
 			closed.each { |pull|
-				puts sprintf("- [%s] [%s](%s)", (pull.checked ? 'x' : ' '), pull.title, pull.html_url)
+				puts sprintf("- [%s] <del>[%s](%s)</del>", (pull.checked ? 'x' : ' '), pull.title, pull.html_url)
 			}
 			puts ''
 
