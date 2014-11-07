@@ -119,13 +119,14 @@ module GitFlowExtension
 		def render
 			pulls = noted_pulls
 
-			if base != 'master' && !head.match(/^(hotfix|release)/) then
+			# なんで指定したのか忘れたので一旦コメントアウトする
+			# if base != 'master' && !head.match(/^(hotfix|release)/) then
 				pulls.concat(
 					merged_pulls.select{|p1|
 						!pulls.map{|p2| p2.number}.include?(p1.number)
 					}
 				)
-			end
+			# end
 
 			pulls.concat(
 				opened_pulls.select{|p1|
