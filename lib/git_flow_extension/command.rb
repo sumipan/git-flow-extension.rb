@@ -4,12 +4,12 @@ require 'git_flow_extension/command/common'
 require 'git_flow_extension/command/release'
 
 if ARGV.empty? then
-	$stderr.puts "no subcommand given"
-	exit 1
+  $stderr.puts "no subcommand given"
+  exit 1
 end
 
 commands = {
-	'release' => GitFlowExtension::Command::Release.new
+  'release' => GitFlowExtension::Command::Release.new
 }
 
 subcommands = Hash.new do |h,k|
@@ -32,11 +32,11 @@ end
 
 begin
   subcommands[cmd][subcmd].parse(opts)
-	commands[cmd].send(subcmd)
+  commands[cmd].send(subcmd)
 rescue => e
-	if ENV['TRACE'] then
-  	puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-	end
+  if ENV['TRACE'] then
+    puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
+  end
 
   usage $!.to_s
 end
