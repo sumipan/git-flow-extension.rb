@@ -81,7 +81,8 @@ module GitFlowExtension
 
       request  = sprintf("https://%s:x-oauth-basic@api.github.com/repos/%s/%s/compare/%s...%s", @client.github.oauth_token, @client.github.user, @client.github.repo, base, head)
       response = `curl #{request}`
-      response = JSON::iconv("utf-8", nil, response)
+      require 'nkf'
+      response = NKF.nkf("-w", response)
       JSON.parse(response)['commits'].each do |commit|
         if match = commit['commit']['message'].match(/^Merge pull request #(\d+)/) then
           pull = cached_pull(match[1])
