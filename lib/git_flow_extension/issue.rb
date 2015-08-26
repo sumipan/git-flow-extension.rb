@@ -26,7 +26,7 @@ module GitFlowExtension
         @client.log.info('base: ' + match[1])
         match[1]
       else
-        raise 'base: not found'
+        raise sprintf('%d: base: not found', @issue.number)
       end
     end
 
@@ -35,7 +35,7 @@ module GitFlowExtension
         @client.log.info('head: ' + match[1])
         match[1]
       else
-        raise 'head: not found'
+        raise sprintf('%d: head: not found', @issue.number)
       end
     end
 
@@ -51,7 +51,7 @@ module GitFlowExtension
 
     def body
       index = @issue.body.index(/\r?\n\r?\n----\r?\n\r?\n/)
-      raise 'parse body failed' unless index
+      raise sprintf('%d: parse body failed', @issue.number) unless index
 
       @issue.body.slice(0, index)
     end
