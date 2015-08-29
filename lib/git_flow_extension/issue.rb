@@ -9,6 +9,7 @@ module GitFlowExtension
 
     def initialize(issue, client)
       @issue  = issue
+      p @issue.pull_request
       raise "not pull_request " + @issue.number unless @issue.pull_request
       
       @client = client
