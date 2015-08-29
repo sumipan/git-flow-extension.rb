@@ -9,6 +9,8 @@ module GitFlowExtension
 
     def initialize(issue, client)
       @issue  = issue
+      raise "not pull_request " + @issue.number unless @issue.pull_request
+      
       @client = client
       @cache  = Hash.new
 
@@ -22,37 +24,22 @@ module GitFlowExtension
     end
 
     def base
-      if match = @issue.body.match(/^base: *(\S+)/) then
-        @client.log.info('base: ' + match[1])
-        match[1]
-      else
-        raise sprintf('%d: base: not found', @issue.number)
-      end
+      @client.log.info('base: ' + @issue.pull_request.base.ref)
+      @issue.pull_request.base.ref
     end
 
     def head
-      if match = @issue.body.match(/^head: *(\S+)/) then
-        @client.log.info('head: ' + match[1])
-        match[1]
-      else
-        raise sprintf('%d: head: not found', @issue.number)
-      end
+      @client.log.info('head: ' + @issue.pull_request.head.ref)
+      @issue.pull_request.head.ref
     end
 
     def tag
-      if match = @issue.body.match(/^tag: *(\S+)/) then
-        @client.log.info('tag: ' + match[1])
-        match[1]
-      else
-        @client.log.info('tag: not found')
-        ''
-      end
+      @client.log.info('tag: not supported')
+      ''
     end
 
     def body
-      index = @issue.body.index(/\r?\n\r?\n----\r?\n\r?\n/)
-      raise sprintf('%d: parse body failed', @issue.number) unless index
-
+      index = @issue.body.index(/^----$/) || 0
       @issue.body.slice(0, index)
     end
 
@@ -160,10 +147,6 @@ module GitFlowExtension
       puts body
       puts ''
       puts '----'
-      puts ''
-      puts 'base: ' + base
-      puts 'head: ' + head
-      puts 'tag: ' + tag
       puts ''
 
       puts 'マージ済みの修正'
