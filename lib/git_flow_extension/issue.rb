@@ -47,7 +47,11 @@ module GitFlowExtension
 
     def cached_pull(number)
       unless @cache.keys.include?(number) then
-        @cache[number] = @client.github.pull_requests.get(:user => @client.github.user, :repo => @client.github.repo, :number => number).body
+        begin
+          @cache[number] = @client.github.pull_requests.get(:user => @client.github.user, :repo => @client.github.repo, :number => number).body
+        rescue
+          @client.log.error('pull_request: not found #' + number)
+        end
       end
 
       @cache[number]
