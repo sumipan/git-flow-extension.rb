@@ -9,8 +9,9 @@ module GitFlowExtension
 
     def initialize(issue, client)
       @issue  = issue
-      p @issue.pull_request
       raise "not pull_request " + @issue.number unless @issue.pull_request
+      @pull_request = client.github.pull_requests.get(:user => @client.github.user, :repo => @client.github.repo, :number => @issue.number)
+      raise "no pull_request " + @issue.number unless @pull_request
       
       @client = client
       @cache  = Hash.new
@@ -25,13 +26,13 @@ module GitFlowExtension
     end
 
     def base
-      @client.log.info('base: ' + @issue.pull_request.base.ref)
-      @issue.pull_request.base.ref
+      @client.log.info('base: ' + @pull_request.base.ref)
+      @pull_request.base.ref
     end
 
     def head
-      @client.log.info('head: ' + @issue.pull_request.head.ref)
-      @issue.pull_request.head.ref
+      @client.log.info('head: ' + @pull_request.head.ref)
+      @pull_request.head.ref
     end
 
     def tag
