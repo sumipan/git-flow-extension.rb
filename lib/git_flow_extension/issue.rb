@@ -10,11 +10,11 @@ module GitFlowExtension
     def initialize(issue, client)
       @issue  = issue
       raise "not pull_request " + @issue.number unless @issue.pull_request
-      @pull_request = client.github.pull_requests.get(:user => @client.github.user, :repo => @client.github.repo, :number => @issue.number)
-      raise "no pull_request " + @issue.number unless @pull_request
-      
       @client = client
       @cache  = Hash.new
+
+      @pull_request = @client.github.pull_requests.get(:user => @client.github.user, :repo => @client.github.repo, :number => @issue.number)
+      raise "no pull_request " + @issue.number unless @pull_request
 
       @client.github.pull_requests.list(:user => @client.github.user, :repo => @client.github.repo, :state => 'open').each do |pull|
         @cache[pull.number] = pull
