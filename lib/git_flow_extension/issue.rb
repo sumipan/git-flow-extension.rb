@@ -79,6 +79,8 @@ module GitFlowExtension
       JSON.parse(response)['commits'].each do |commit|
         if match = commit['commit']['message'].match(/^Merge pull request #(\d+)/) then
           pull = cached_pull(match[1])
+          next unless pull
+          
           if pull.merged_at then
             pull.state = 'merged'
           end
