@@ -41,7 +41,7 @@ module GitFlowExtension
     end
 
     def body
-      index = @issue.body.index(/^----$/) || 0
+      index = @issue.body.index(/^----/) || 0
       @issue.body.slice(0, index)
     end
 
