@@ -20,6 +20,7 @@ module GitFlowExtension
     end
 
     def initialize
+      super({})
       git = Git.open(Dir::pwd)
       match = git.remotes.first.url.match(/[:\/](.+)\/(.+)\.git/)
       if match && match[1] && match[2] then
