@@ -10,7 +10,7 @@ module GitFlowExtension
 
     def self.instance(client)
       unless @instance then
-        @instance = self.new
+        @instance = self.new({})
         @instance.client = client
       end
 
