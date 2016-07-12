@@ -10,7 +10,7 @@ module GitFlowExtension
 
     def self.instance(client)
       unless @instance then
-        @instance = self.new({})
+        @instance = self.new
         @instance.client = client
       end
 
@@ -27,10 +27,8 @@ module GitFlowExtension
           yield config if block_given?
         end
 
-        self.setup({
-          :user => match[1],
-          :repo => match[2]
-        })
+        self.user = match[1]
+        self.repo = match[2]
       end
     end
   end
